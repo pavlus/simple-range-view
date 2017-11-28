@@ -18,6 +18,7 @@ package me.bendik.simplerangeview
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Parcel
@@ -29,6 +30,7 @@ import android.view.View
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
 
+@Suppress("unused")
 open class SimpleRangeView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -323,6 +325,7 @@ open class SimpleRangeView @JvmOverloads constructor(
     /**
      * Draw range ticks
      */
+    @Suppress("LoopToCallChain")
     protected open fun drawTicks(canvas: Canvas) {
         if (showTicks) {
             val left = if (showFixedLine) startFixed else start
@@ -443,6 +446,8 @@ open class SimpleRangeView @JvmOverloads constructor(
     private fun getPositionX(i: Int): Float = (innerRangePaddingLeft + stepPx * i)
     private fun getPositionY() = posY
 
+    // no need in click events
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
         if (!isEnabled) return false
@@ -606,12 +611,14 @@ open class SimpleRangeView @JvmOverloads constructor(
         width = when (widthMode) {
             MeasureSpec.EXACTLY -> widthSize
             MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            MeasureSpec.UNSPECIFIED -> desiredWidth
             else -> desiredWidth
         }
 
         height = when (heightMode) {
             MeasureSpec.EXACTLY -> heightSize
             MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            MeasureSpec.UNSPECIFIED -> desiredHeight
             else -> desiredHeight
         }
 
